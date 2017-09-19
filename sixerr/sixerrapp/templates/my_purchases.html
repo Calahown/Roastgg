@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block page %}
+  <h1 style="margin-bottom: 30px">My Purchases</h1>
+  <div class="panel panel-default">
+    <table class="table table-bordered table-striped">
+      <thead class="bg-success">
+        <tr>
+          <th></th>
+          <th>Gig Title</th>
+          <th>Author</th>
+          <th>Price ($)</th>
+          <th>Status</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for purchase in purchases %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td><a href="{% url 'transaction_detail' purchase.id %}">
+              {{ purchase.gig.title }}{% if purchase.unread %}&nbsp;
+              <span class="badge badge-pill badge-red">{{ purchase.unread }}</span>{% endif %}</a></td>
+            <td><a href="{% url 'profile' purchase.gig.user.profile.displayname %}">{{ purchase.gig.user.profile.displayname }}</a></td>
+            <td>{{ purchase.gig.price }}</td>
+            <td>{{ purchase.get_status_display }}</td>
+            <td>{{ purchase.time }}</td>
+          </tr>
+
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+
+{% endblock %}

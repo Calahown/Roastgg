@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block page %}
+  <h1 style="margin-bottom: 30px">My Convesations</h1>
+  <div class="panel panel-default">
+    <table class="table table-bordered table-striped">
+      <thead class="bg-success">
+        <tr>
+          <th></th>
+          <th>Initiated</th>
+          <th>By</th>
+          <th>With</th>
+          <th>Gig Reference</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for conversation in conversations %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td><a href="{% url 'conversation_detail' conversation.id %}">
+              {{ conversation.starttime|naturaltime }}{% if conversation.unread %}&nbsp;
+              <span class="badge badge-pill badge-red">{{ conversation.unread }}</span>{% endif %}</a></td>
+            <td><a href="{% url 'profile' conversation.sender.profile.displayname %}">
+              {{ conversation.sender.profile.displayname }}</a></td>
+            <td><a href="{% url 'profile' conversation.receiver.profile.displayname %}">
+              {{ conversation.receiver.profile.displayname }}</a></td>
+            {% if conversation.gig.id %}
+            <td><a href="{% url 'gig_detail' conversation.gig.id %}">{{ conversation.gig.title }}</td>
+            {% else %}
+            <td>&nbsp;</td>
+            {% endif %}
+          </tr>
+
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+
+{% endblock %}

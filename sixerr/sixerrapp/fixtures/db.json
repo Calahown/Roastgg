@@ -1,0 +1,112 @@
+[
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$36000$dbrnc0Ygcck8$/HyeEEYcA7lnrLu86NCdvA/oyE/CHUL3d9oFgDFIDuU=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "rosty",
+    "first_name": "",
+    "last_name": "",
+    "email": "notifications@roast.gg",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2017-08-21T05:29:33.987Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 2,
+  "fields": {
+    "password": "!iYrkHYmyAkxW2jRdbd0azF4KRCsKhDi1KjtGcns7",
+    "last_login": "2017-09-03T00:57:39.954Z",
+    "is_superuser": false,
+    "username": "TonyStark",
+    "first_name": "Tony",
+    "last_name": "Stark",
+    "email": "rodriguez.jl71@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2017-08-21T05:52:58.499Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "pk": 3,
+  "fields": {
+    "password": "!GyZrt2hlRC2ymJFQiuFzg4oyNsM9kbBd1TJD0Sb1",
+    "last_login": "2017-09-03T02:02:30.551Z",
+    "is_superuser": false,
+    "username": "elingerojo",
+    "first_name": "",
+    "last_name": "",
+    "email": "elingerojo2@hotmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2017-08-27T20:05:04.927Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "sixerrapp.gig",
+  "pk": "54ef68b8-6616-4fce-ba58-724554367d7f",
+  "fields": {
+    "title": "Colorful Storage",
+    "category": "LL",
+    "description": "Improve you game with colorful unlimited storage for your assets.",
+    "price": 65,
+    "photo": "9760e19c-66b9-46bc-b961-967b4f773e45/knitting-storage-knitting-room.jpg",
+    "status": false,
+    "user": 3,
+    "create_time": "2017-09-02T23:18:05.021Z",
+    "boughttimes": 0,
+    "sellmsg": "",
+    "avgstars": null
+  }
+},
+{
+  "model": "sixerrapp.gig",
+  "pk": "5ef3959b-66f2-46a4-87ff-1c6dc403f510",
+  "fields": {
+    "title": "Cinderella shoe",
+    "category": "LL",
+    "description": "To get unlimited mileage",
+    "price": 7,
+    "photo": "3df91bb4-f7a0-4614-9aef-a6cb6a1969e1/51-K3nkTAHL._UY395_.jpg",
+    "status": true,
+    "user": 2,
+    "create_time": "2017-08-27T15:10:18.526Z",
+    "boughttimes": 3,
+    "sellmsg": "",
+    "avgstars": null
+  }
+},
+{
+  "model": "sixerrapp.ranking",
+  "pk": 1,
+  "fields": {
+    "user": 3,
+    "owusername": null,
+    "owrank": null,
+    "lolusername": null,
+    "lolrank": null
+  }
+},
+{
+  "model": "sixerrapp.ranking",
+  "pk": 2,
+  "fields": {
+    "user": 2,
+    "owusername": null,
+    "owrank": null,
+    "lolusername": "cuchara",
+    "lolrank": "SV"
+  }
+}
+]

@@ -1,0 +1,493 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load template_settings %}
+
+{% block vendor %}
+  <script src="{% static 'js/validator.min.js' %}"></script>
+  <script src="{% static 'js/js.cookie.js' %}"></script>
+  {% if request.user == profile.user %}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    {% if canNotPublishGig %}
+      <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+    {% endif %}
+  {% endif %}
+{% endblock %}
+
+{% block page %}
+
+<div class="col-md-6">
+  {% if request.user == profile.user %}
+  {% if postError %}
+
+    <div class="alert alert-warning alert-dismissable" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>Warning!</strong> {{ postError }}
+    </div>
+
+  {% endif %}
+
+  <div class="text-center">
+    <h1><b>{{ profile.displayname}}</b></h1>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <form class="form-horizontal" method="POST" enctype="multipart/form-data" role="form" data-toggle="validator">
+        {% csrf_token %}
+        <input type="hidden" name="profile_form" value="profile_form">
+        <img src="{{ profile.avatar }}" class="img-responsive center-block">
+        {% if profile.avgstars %}
+        <center>
+          <h3>
+        <label class="glyphicon glyphicon-star" readonly></label><font color="gray">({{ profile.avgstars }})</font>
+      </h3>
+      </center>
+      {% endif %}
+        <hr/>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Display username</label>
+          <div class="col-sm-9">
+            <input class="form-control" value="{{ profile.displayname }}" name="displayname" required>
+            <div class="help-block with-errors">* required</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Slogan</label>
+          <div class="col-sm-9">
+            <input class="form-control" value="{{ profile.slogan }}" name="slogan">
+            <div class="help-block with-errors"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">About</label>
+          <div class="col-sm-9">
+            <textarea rows="5" class="form-control" name="about" placeholder="Your profile's about">{{ profile.about }}</textarea>
+            <div class="help-block with-errors"></div>
+          </div>
+        </div>
+
+        {% if gigs or profile.country %}
+        <div id="country-div" class="form-group">
+          <label class="col-sm-3 control-label">Country</label>
+          <div class="col-sm-9">
+            <select id="country-select" name="country" class="form-control" required>
+              <option disabled{% if not profile.country %} selected{% endif %} value> -- select an option -- </option>
+              {% for country in countries %}
+              <option value="{{country.code}}" {% if profile.country == country.code %} selected{% endif %}>{{country.text}}</option>
+              {% endfor %}
+            </select>
+            <div class="help-block with-errors">* required</div>
+          </div>
+        </div>
+        <div id="billing-div">
+          <div id="dynamic_state-div" class="form-group">
+            <label class="col-sm-3 control-label" for="state">Region</label>
+            <div class="col-sm-9">
+              <input type="text" name="state" class="form-control"{% if profile.state %} value="{{profile.state}}"{% endif %}>
+            </div>
+          </div>
+          <div id="zipcode-div" class="form-group">
+            <label id="address_zip-label" class="col-sm-3 control-label" for="address_zip">Postal code</label>
+            <div class="col-sm-9">
+              <input id="zipcode-input" type="text" name="zipcode" class="form-control"{% if profile.zipcode %} value="{{profile.zipcode}}"{% endif %}>
+              <div class="help-block with-errors">&nbsp;</div>
+            </div>
+          </div>
+        </div>
+
+        <script>
+        /**************************************
+        Helper functions for country/state select logic
+        ****************************************/
+        // this toggles the visibility of zipcode field depending on country selected value
+        function toggleFields() {
+           if ($("#country-select")[0].selectedIndex <= 0) {
+             $("#billing-div").hide();
+             // $("#state-select").val('');
+           } else {
+             if ($("#country-select").val() === "US") {
+                 // $("#zipcode-div").show();
+                 $("#zipcode-input").prop('required', true);
+                 $("#zipcode-input").attr('pattern', '\\d{5}\(\?:\[-\\s]\\d{4}\)\?');
+                 $("#zipcode-div .help-block").html('* required');
+             } else {
+                 // $("#zipcode-div").hide();
+                 $("#zipcode-input").prop('required', false);
+                 $("#zipcode-input").removeAttr('pattern');
+                 $("#zipcode-div .help-block").html('&nbsp;');
+             }
+             $("#billing-div").show();
+           }
+        }
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        // Get country data and regions for selected country by Ajax
+        function getAjaxCountryData(countryStr = $('#country-select option:selected').val()) {
+         var csrftoken = Cookies.get('csrftoken');
+
+         $.ajax({
+             beforeSend: function(xhr, settings) {
+                 if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                 }
+             },
+             url: '/regions/',
+             type: 'POST',
+             data:  { selected_country: countryStr },
+             success: function(res) {
+
+               // Helper to populate select options form object that contains value and text
+               function loadSelectWithOptions(selectElem, optionsObj, msgTxt, selectedOpt='') {
+                 var optionElem
+                 // remove any previous options from Select element
+                 selectElem.find('option').remove()
+                 if (msgTxt) {
+                   // append msgTxt as first disabled selected option
+                   optionElem = $('<option></option>').attr("value", "")
+                                                     .attr("disabled", "disabled")
+                                                     .text(msgTxt)
+                   // default to select the first one
+                   // if (selectedOpt === '') optionElem.attr("selected", "selected")
+                   selectElem.append(optionElem)
+                 }
+                 // append options from optionsObj to select
+                 for (var i=0; i < optionsObj.length;++i) {
+                   optionElem = $('<option></option>').attr("value", optionsObj[i].value)
+                                                     .text(optionsObj[i].text)
+                   if (optionsObj[i].value != '' &&
+                        optionsObj[i].value === selectedOpt) optionElem.attr("selected", "selected")
+                   selectElem.append(optionElem)
+                 }
+               }
+
+               // Convert from text to JavaScript object
+               var country_data = JSON.parse(res)
+               var lbl = '<label id="address_state-label" class="col-sm-3 control-label" for="state"></label>'
+               var openDiv = '<div class="col-sm-9">'
+               var err = '<div class="help-block with-errors">&nbsp;</div>'
+               var errRequired = '<div class="help-block with-errors">* required</div>'
+               var closeDiv = '</div>'
+               var fld
+               if (country_data.code === 'US') {
+                 fld = '<select id="address_state-select" name="state" class="form-control" required></select>'
+                 $("#dynamic_state-div").empty().append(lbl + openDiv + fld + errRequired + closeDiv)
+                 loadSelectWithOptions($("#address_state-select"), country_data.regions, "select an option"{% if profile.state %}, "{{profile.state}}"{% endif %})
+                 $("#address_zip-label").text('ZIP code');
+                 $(".tax-text").text('TAX');
+               } else {
+                 fld = '<input type="text" name="state" class="form-control"{% if profile.state %} value="{{profile.state}}"{% endif %}>'
+                 $("#dynamic_state-div").empty().append(lbl + openDiv + fld + closeDiv)
+                 $("#address_zip-label").text('Postal code');
+                 $(".tax-text").text('VAT');
+               }
+               $("#address_state-label").text(country_data.type);
+
+             }
+         });
+        }
+
+        $(document).ready(function () {
+          getAjaxCountryData();
+          toggleFields(); // call this first so we start out with the correct visibility depending on the selected form values
+          // this will call our toggleFields function every time the selection value of our other field changes
+          $("#country-select").change(function () {
+              toggleFields();
+              if ($("#country-select")[0].selectedIndex >= 0)
+                getAjaxCountryData();
+          });
+        });
+
+        </script>
+
+        {% endif %}{# this endif: if gigs or profile.country #}
+
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Email preference</label>
+          <div class="col-sm-9">
+            <div class="checkbox checkbox-primary">
+              <input id="checkbox-emailoptin" type="checkbox" name="emailoptin"{% if profile.emailoptin %} checked{% endif %}>
+              <label for="checkbox-emailoptin">
+              Send me private emails when other registered users want to contact me. Private means: We disclose your email.
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <br/>
+        <button class="btn btn-success" type="submit">Update</button>
+      </form>
+    </div>
+  </div>
+
+  {% else %}{# this endif: if request.user == profile.user #}
+
+  <div class="text-center">
+    <h1><b>{{ profile.displayname}}</b></h1>
+    <p>{{ profile.slogan }}</p>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <img src="{{ profile.avatar }}" class="img-responsive center-block">
+      {% if profile.avgstars %}
+      <center>
+        <h3>
+      <label class="glyphicon glyphicon-star" readonly></label><font color="gray">({{ profile.avgstars }})</font>
+    </h3>
+    </center>
+    {% endif %}
+      <h3 class="text-uppercase"><b>About {{ profile.displayname }}</b></h3>
+      <hr/>
+      <p>{{ profile.about|linebreaks }}</p>
+      {% if ranking.owrank %}
+      <p>Verified Overwatch rank: {{ ranking.get_owrank_display }}</p>
+      {% endif %}
+      {% if ranking.lolrank %}
+      <p>Verified League of Legends rank: {{ ranking.get_lolrank_display }}</p>
+      {% endif%}
+      <form method="POST" action="/conversations/">
+        {% csrf_token %}
+          <input name="user_id" value="{{ profile.user.id }}" hidden>
+          <button type="submit" class="btn btn-success btn-block">Contact Me</button>
+      </form>
+    </div>
+  </div>
+
+  {% endif %}
+
+<!-- Start extra forms for Ranking -->
+{% if request.user == profile.user and gigs%}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4>Ranking</h4>
+    <p>Instructions:<br>
+    To publish your verified rank, input your username in the game and send a "friend request" to <strong>Roastgg</strong> for League of Legends NA or <strong>Roastgg#1638</strong> for Overwatch. </p>
+    <p>If you need to verify a non-NA league account please send an to email contact.us@roast.gg</p>
+    <p>We will not accept the "friend request" but will log the time of the request. If both "verify" and "friend" request are within 10 minutes, your rank will be considered verified and will appear in your Gigs.</p>
+    <p>Verification is a manual process. Expect a 24-48 hr. response time.</p>
+  </div>
+  <div class="panel-body">
+    {% if ranking.owrank or ranking.lolrank %}
+    <h4>Verified Ranks</h4>
+    {% if ranking.owrank %}
+    <p>Verified Overwatch rank: {{ ranking.get_owrank_display }}</p>
+    {% endif %}
+    {% if ranking.lolrank %}
+    <p>Verified League of Legends rank: {{ ranking.get_lolrank_display }}</p>
+    {% endif%}
+    <hr />
+    {% endif%}
+    <form class="form-horizontal" method="POST" enctype="multipart/form-data" role="form" data-toggle="validator">
+      {% csrf_token %}
+      <input type="hidden" name="rankverify_form" value="rankverify_form">
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Game</label>
+        <div class="col-sm-9">
+          <select name="game" class="form-control" required>
+            <option value="" selected disabled>Select an option...</option>
+            <option value="LL">League of Legends</option>
+            <option value="OW">Overwatch</option>
+          </select>
+          <div class="help-block with-errors">* required</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Username in Game</label>
+        <div class="col-sm-9">
+          <input class="form-control" value="" name="gameuser" required>
+          <div class="help-block with-errors">* required</div>
+        </div>
+      </div>
+      <button class="btn btn-success" type="submit">Update</button>
+    </form>
+    {% if pendingRankverify %}
+    <h3>Pending Rank Verifications</h3>
+    <ol>
+    {% for pending in pendingRankverify %}
+      <li><span class="gameuser">{{ pending.gameuser }}</span> in <span class="game">{{ pending.get_game_display }}.</span></li>
+    {% endfor %}
+    </ol>
+    {% endif %}
+  </div>
+</div>
+
+{% endif %}
+<!-- End extra forms for Ranking -->
+
+<!-- Start extra forms for email validation -->
+{% if request.user == profile.user and gigs%}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h4>Set or change email</h4>
+  </div>
+  <div class="panel-body">
+    <form class="form-horizontal" method="POST" enctype="multipart/form-data" role="form" data-toggle="validator">
+      {% csrf_token %}
+      <input type="hidden" name="emailvalidate_form" value="emailvalidate_form">
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Actual email</label>
+        <div class="col-sm-9">
+          <div class="fake-input">
+            {{ profile.vanitymail}}{% autoescape off %}{% render_email_verified profile %}{% endautoescape %}
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">New email</label>
+        <div class="col-sm-9">
+          <input class="form-control" type="email" value="" name="vanitymail" required>
+          <div class="help-block with-errors">* required</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Confirm</label>
+        <div class="col-sm-9">
+          <input class="form-control" type="email" value="" name="confirm_vanitymail" required>
+          <div class="help-block with-errors">* required</div>
+        </div>
+      </div>
+      <div class="g-recaptcha" data-sitekey="{% settings_value "RECAPTCHA_KEY" %}"></div>
+      <br />
+      <button class="btn btn-success" type="submit">Send verification link</button>
+    </form>
+  </div>
+</div>
+
+{% endif %}
+<!-- End extra forms for email validation -->
+
+</div>
+  {% if gigs %}
+  <h3 class="text-uppercase" style = "margin-top:50px"><b>{{ profile.displayname }}'s gigs</b></h3>
+  <div id="gig-previews" class="row">
+    {% if request.user == profile.user and canNotPublishGig %}
+    <div class="col-md-3 alert alert-warning alert-dismissable" role="alert">
+      <button type="button" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>Notice!</strong>
+      <h4>So your Gigs can be published, you need to:</h4>
+      <ul>
+        {% if noCompleteBillingCountry %}
+        <li><p> Complete country information in your profile.</p></li>
+        {% endif %}
+        {% if noStripeAccountYet %}
+        <li><p> Connect a Stripe account so you can be paid.</p></li>
+        {% endif %}
+      </ul>
+    </div>
+    <script>
+    $(".alert button.close").click(function (e) {
+        $(this).parent().fadeOut('slow');
+    });
+    </script>
+    {% endif %}
+
+    {% include 'commonTemplates/gigsThumbnail.html' %}
+
+  </div>
+
+  {% if request.user == profile.user and canNotPublishGig %}
+  <script>
+    var sizeTheOverlays = function() {
+        $(".overlay").resize().each(function() {
+        var h = $(this).parent().outerHeight();
+        var w = $(this).parent().outerWidth();
+        $(this).css("height", h);
+        $(this).css("width", w);
+      });
+    };
+
+    $('#gig-previews').imagesLoaded()
+      .done( function( instance ) {
+        sizeTheOverlays();
+        // console.log('all images successfully loaded');
+      })
+
+    var width = $(window).width();
+    $(window).resize(function(){
+       if($(this).width() != width){
+          width = $(this).width();
+          sizeTheOverlays();
+       }
+    });
+
+  </script>
+  {% endif %}
+
+  {% else %}
+  <h3 class="text-uppercase" style = "margin-top:50px"><b>{{ profile.displayname }}'s gigs</b></h3>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="thumbnail">
+        <h4><center>No gigs to display</center></h4>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+
+
+  {% if sreviews %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4>Reviews of {{ profile.displayname }} as seller</h4>
+    </div>
+    <div class="panel-body">
+      <ul class="list-group">
+        {% for review in sreviews %}
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-md-2">
+                <a href="{% url 'profile' review.reviewer.profile.displayname %}">
+                  <img src="{{ review.reviewer.profile.avatar}}" class="img-circle center-block" height ="60" width ="60">
+                </a>
+              </div>
+              <div class="col-md-10">
+                <a href="{% url 'profile' review.reviewer.profile.displayname %}">
+                  <h4>{{ review.reviewer.profile.displayname }}</h4>
+                </a>
+                <p>{{ review.content|linebreaks }}</p>
+              </div>
+            </div>
+          </li>
+          {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if breviews %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4>Reviews of {{ profile.displayname }} as buyer</h4>
+    </div>
+    <div class="panel-body">
+      <ul class="list-group">
+        {% for review in breviews %}
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-md-2">
+                <a href="{% url 'profile' review.reviewer.profile.displayname %}">
+                  <img src="{{ review.reviewer.profile.avatar}}" class="img-circle center-block" height ="60" width ="60">
+                </a>
+              </div>
+              <div class="col-md-10">
+                <a href="{% url 'profile' review.reviewer.profile.displayname %}">
+                  <h4>{{ review.reviewer.profile.displayname }}</h4>
+                </a>
+                <p>{{ review.content|linebreaks }}</p>
+              </div>
+            </div>
+          </li>
+          {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+
+{% endblock %}

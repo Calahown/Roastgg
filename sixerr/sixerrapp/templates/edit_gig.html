@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load template_settings %}
+
+{% block vendor %}
+  <script src="{% static 'js/validator.min.js' %}"></script>
+  {% include 'commonTemplates/uploader_setup.html' %}
+{% endblock %}
+
+{% block page %}
+  {% if error %}
+
+    <div class="alert alert-warning alert-dismissable" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>Warning!</strong> {{ error }}
+    </div>
+
+  {% endif %}
+
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <form class="form-horizontal" method="POST" enctype="multipart/form-data" role="form" data-toggle="validator">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Gig Title</label>
+          <div class="col-sm-10">
+            <textarea rows="3" class="form-control" name="title" data-minlength="2" required>{{ gig.title}}</textarea>
+            <div class="help-block with-errors"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">CATEGORY</label>
+          <div class="col-sm-10">
+            <select name="category" class="form-control" value ="{{ gig.category}}" required>
+              <option {% if gig.category == "LL" %} selected {% endif %} value="LL">League of Legends</option>
+              <option {% if gig.category == "OW" %} selected {% endif %} value="OW">Overwatch</option>
+              <option {% if gig.category == "CS" %} selected {% endif %} value="CS">Counter Strike</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">DESCRIPTION</label>
+          <div class="col-sm-10">
+            <textarea rows="5" class="form-control" name="description" data-minlength="2" required>{{ gig.description }}</textarea>
+            <div class="help-block with-errors"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">PRICE ($)</label>
+          <div class="col-sm-10">
+            <input type="number" class="form-control" min="1" max="500" value="{{ gig.price }}" name="price" required>
+            <div class="help-block with-errors"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Image</label>
+          <div class="col-sm-10">
+            <div class="thumbnail">
+              <img src="{% settings_value "MEDIA_ROOT" %}{{ gig.photo }}" >
+            </div>
+            {% include 'commonTemplates/file_uploader_field.html' with instance=gig field=gig.photo fieldname='photo' %}
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Status</label>
+          <div class="col-sm-10">
+            {% if canNotPublishGig %}
+            <select name="status" class="form-control" disabled title="When ready, link a Stripe account so you can be paid">
+              <option value="1">Active</option>
+              <option value="0" selected>DISABLED</option>
+            </select>
+            <div class="help-block with-errors">* forced to DISABLED until publishing requirements below fulfilled</div>
+            {% else %}
+            <select name="status" class="form-control" required>
+              <option value="1" {% if gig.status %} selected {% endif %}>Active</option>
+              <option value="0" {% if not gig.status %} selected {% endif %}>DISABLED</option>
+            </select>
+            {% endif %}
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Purchase Instructions</label>
+          <div class="col-sm-10">
+            <p>A message of initial instructions for the buyer</p>
+              <textarea type="text" class="form-control" name="sellmsg">{{ gig.sellmsg }}</textarea>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-success">Update Gig</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {% if canNotPublishGig %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4>Gigs publishing requirements</h4>
+    </div>
+    <div class="panel-body">
+      <h4>So your Gigs can be published, you need to:</h4>
+      <ul>
+        {% if noCompleteBillingCountry %}
+        <li>
+          <p>Complete required data in <strong><a href="{% url 'profile' user.profile.displayname %}">My Profile</a></strong>.</p>
+        </li>
+        {% endif %}
+        {% if noStripeAccountYet %}
+        <li>
+          <p> Connect a Stripe account so you can be paid.</p>
+          <center><a href="{% url 'social:begin' 'stripe'%}?next={{request.path}}"><img src="{% static 'img/blue-on-light@2x.png'%}" width='270'></a></center>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4>Things to know and recommendations:</h4>
+    </div>
+    <div class="panel-body">
+      <ul>
+        <li>Please keep the Gig titles and images PG.</li>
+        <li>Keep in mind the search is only on the title.</li>
+        <li>Post a profile of your rank.</li>
+        <br>
+        <li>Please refer to the FAQ for more questions or contact us.</li>
+      </ul>
+      <br>
+    </div>
+  </div>
+
+{% endblock %}

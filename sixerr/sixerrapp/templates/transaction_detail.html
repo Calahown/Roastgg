@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load template_settings %}
+{% load tz %}
+
+{% block vendor %}
+<link rel="stylesheet" href="{% static 'css/chat.css' %}">
+{% endblock %}
+
+{% block page %}
+ <div class="panel panel-default">
+   <div class="panel-body">
+     <h3>{{ purchase.title }}</h3>
+     <img src="{% settings_value "MEDIA_ROOT" %}{{ purchase.photo }}" class="img-responsive center-block">
+   </div>
+ </div>
+
+ <div class="panel panel-default">
+   <div class="panel-heading">
+     <h4>About This {{ view_as }}</h4>
+   </div>
+   <div class="panel-body">
+     <div class="row">
+       <div class="col-xs-12">
+         <dt>Description</dt>
+         <dd>{{ purchase.description|linebreaks }}</dd>
+       </div>
+     </div>
+     <div class="row">
+       <div class="col-xs-12 col-md-4">
+         <dt>Author</dt>
+         <dd>{{ purchase.gig.user.profile.displayname }}</dd>
+       </div>
+       <div class="col-xs-12 col-md-4">
+         <dt>Buyer</dt>
+         <dd>{{ purchase.buyer.profile.displayname }}</dd>
+       </div>
+       <div class="col-xs-12 col-md-4">
+         <dt>Purchased</dt>
+         <dd>{{ purchase.time }}</dd>
+       </div>
+     </div>
+   </div>
+ </div>
+
+ <div class="panel panel-default">
+   <div class="panel-heading">
+     <h4>CHAT</h4>
+   </div>
+   <div class="panel-body">
+     <div id="the-chat" class="chat">
+       {% for chatpost in chatentries %}
+       <div class={% if request.user != chatpost.poster %}"message"{% else %}"message me"{% endif %}>
+         <img src="{{ chatpost.poster.profile.avatar }}"  />
+         <div><p>{{ chatpost|linebreaksbr }}<br><span class="timestamp">{{ chatpost.time|date:"f A T d M Y" }}</span></p></div>
+       </div>
+       {% endfor %}
+     </div>
+     <form method="POST">
+       {% csrf_token %}
+       <div class="form-group chatpost">
+         <textarea name="chattext" class="form-control"></textarea>
+         <button type="submit" class="btn btn-success">Post</button>
+       </div>
+     </form>
+   </div>
+ </div>
+
+ <div class="panel panel-default">
+   <div class="panel-heading">
+     <h4>STATUS - Waiting for {{ status_msg }}</h4>
+   </div>
+   <div class="panel-body">
+     {% for button in buttons %}
+     <div class="step">
+       <div class="stair">
+
+          <form action="#" method="POST">
+            {% csrf_token %}
+            <input type="hidden" value="{{ button.next }}" name="entry" />
+            <button name="mybtn" class="btn btn-{{ button.class }} {{ button.disabled }}" value="dummy" {{ button.disabled }}>
+              <span class="label label-as-badge label-{{ button.class }}">
+                <span class="big-step-number">{{ forloop.counter }}</span>
+              </span>
+              <span class="stair-text step-{{ forloop.counter }}">{{ button.text }}</span>
+              <span class="glyphicon glyphicon-{{ button.glyphicon }}"></span>
+            </button>
+          </form>
+
+       </div>
+     </div>
+     {% endfor %}
+   </div>
+ </div>
+ {% if purchase.status == "AC" %}
+ <div class="panel panel-default">
+   <div class="panel-heading">
+     <h4>Review submission</h4>
+   </div>
+   <div class="panel-body">
+     <form method="POST">
+       {% csrf_token %}
+       <div class="form-group">
+<fieldset class="rating" name="starss">
+    <input type="radio" id="star5" name="rating" value="5" /><label class = "full" for="star5" title="Awesome - 5 stars"></label>
+    <input type="radio" id="star4" name="rating" value="4" /><label class = "full" for="star4" title="Pretty good - 4 stars"></label>
+    <input type="radio" id="star3" name="rating" value="3" /><label class = "full" for="star3" title="Meh - 3 stars"></label>
+    <input type="radio" id="star2" name="rating" value="2" /><label class = "full" for="star2" title="Kinda bad - 2 stars"></label>
+    <input type="radio" id="star1" name="rating" value="1" /><label class = "full" for="star1" title="Sucks big time - 1 star"></label>
+    </fieldset>
+       </div>
+       <div class="form-group">
+         <textarea name="reviewbtn" class="form-control" required placeholder="{% if disablebtn %}Your review is already submitted{% else %} Your review here... {% endif %}"></textarea>
+       </div>
+       <div class="form-group">
+         <button type="submit" class="btn btn-success" {% if disablebtn %} disabled {% endif %}>Post</button>
+       </div>
+     </form>
+   </div>
+ </div>
+ {% endif %}
+
+ <script>
+ // jQuery plugin to prevent double submission of forms
+ jQuery.fn.preventDoubleSubmission = function() {
+   $(this).on('submit',function(e){
+     var $form = $(this);
+
+     if ($form.data('submitted') === true) {
+       // Previously submitted - don't submit again
+       e.preventDefault();
+     } else {
+       // Mark it so that the next submit can be ignored
+       $form.data('submitted', true);
+     }
+   });
+
+   // Keep chainability
+   return this;
+ };
+
+ $('form').preventDoubleSubmission();
+ // Scroll chat to bottom
+ $("#the-chat").animate({ scrollTop: $('#the-chat').prop("scrollHeight")}, 1000);
+ </script>
+
+{% endblock %}

@@ -1,0 +1,327 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block page %}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="sub-header">
+        <h2>VOD Roasting Marketplace</h2>
+        <p>The place for professional VOD roast.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row bg-gray">
+    <div class="col-md-12">
+      <h2 class="sub-header">Seller</h2>
+      <p class="sub-text">Get paid for your expert feedback</p>
+    </div>
+
+    <div class="col-md-4">
+      <div class="step-icon">
+        <div class="image-container">
+          <img src="{% static 'img/seller-step-one-2.png' %}" >
+        </div>
+      </div>
+      <div class="caption">
+        <h3 class="step-text">1. Create a Gig</h3>
+        <p>Login with Twitch or Facebook and set it up.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="step-icon">
+        <div class="image-container">
+          <img src="{% static 'img/seller-step-two-2.png' %}" >
+        </div>
+      </div>
+      <div class="caption">
+        <h3 class="step-text">2. Deliver personal roast</h3>
+        <p>Get posted when a VOD for review is ready.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="step-icon">
+        <div class="image-container">
+          <img src="{% static 'img/seller-step-three-2.png' %}" >
+        </div>
+      </div>
+      <div class="caption">
+        <h3 class="step-text">3. Get paid </h3>
+        <p>Get paid when gig completed.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row">
+    &nbsp;
+  </div>
+
+  <div class="row bg-white">
+    <div class="col-md-12">
+      <div class="sub-header">
+        <h2>Buyer</h2>
+        <p class="sub-text">Get you VOD roasted by top gamers</p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="step-icon">
+        <div class="image-container">
+          <img src="{% static 'img/buyer-step-one-2.png' %}" >
+        </div>
+      </div>
+      <div class="caption">
+        <h3 class="step-text">1. Place an order</h3>
+        <p>Choose a seller and place an order.</p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="step-icon">
+        <div class="image-container">
+          <img src="{% static 'img/buyer-step-two-2.png' %}" >
+        </div>
+      </div>
+      <div class="caption">
+        <h3 class="step-text">2. Share your VOD</h3>
+        <p>Record a VOD and share the link.</p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="step-icon">
+        <div class="image-container">
+          <img src="{% static 'img/buyer-step-three-2.png' %}" >
+        </div>
+      </div>
+      <div class="caption">
+        <h3 class="step-text">3. Climb the ladder</h3>
+        <p>Improve you play and enjoy your gains.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row">
+    &nbsp;
+  </div>
+
+
+  <!-- FAQ - General -->
+  <div id="faqs">
+    <h2>FAQ - General</h2>
+    <div class="panel-group" id="accordion-general">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion-general" href="#collapse-g1">What is roast.gg?</a>
+          </h4>
+        </div>
+        <div id="collapse-g1" class="panel-collapse collapse">
+          <div class="panel-body"> Roast.gg is a VOD review marketplace. It is designed to help competitve players who are looking to improve their gameplay with high ranking players.
+          <br>The high ranking players sell personalized advice based on a gameplay video.</div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion-general" href="#collapse-g2">How do I record gameplay?</a>
+          </h4>
+        </div>
+        <div id="collapse-g2" class="panel-collapse collapse">
+          <div class="panel-body">Keep in mind these are recomendations. You are welcome to use any service you want. <br>
+
+          For Windows 10 users: <br> &nbsp;&nbsp;Pressing windowskey + g opens the gamebar which will let you record. <br>
+          &nbsp;&nbsp;&nbsp;           The gamebar is part of the Xbox app. By default the maximum video length is set to 1 hour. <br>
+          &nbsp;&nbsp;&nbsp;           Some games take longer, so it might be good to change it. <br>
+
+          For other Windows versions: <br> Plays.tv app allows for easy gameplay recording. The default video quality settings may be a little low.
+          <br> &nbsp;&nbsp;&nbsp;For more information: <a href="https://www.plays.tv">www.plays.tv</a>
+          <br>
+
+          For Mac users: <br> Quicktime is a good option. Please follow the guide below. It is not necessary to use the  <br>
+          &nbsp;&nbsp;&nbsp;higher framerate part of the guide, but it might be desirable. <br>
+
+          &nbsp;&nbsp;&nbsp;Quicktime guide: <a href="https://www.imore.com/how-screen-record-gameplay-mac"> https://www.imore.com/how-screen-record-gameplay-mac</a>
+                               </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion-general" href="#collapse-g5">What is a VOD review?</a>
+          </h4>
+        </div>
+        <div id="collapse-g5" class="panel-collapse collapse">
+          <div class="panel-body">VOD reviews are a way for a player to have a secondary point of view of their gameplay. <br>
+          &nbsp;&nbsp;&nbsp; Here are some examples: <br>
+
+          League of Legends: <br>
+
+          <div style="position:relative;height:0;padding-bottom:56.25%"><iframe src="https://www.youtube.com/embed/M38mRUQF7kE?ecver=2" style="position:absolute;width:100%;height:100%;left:0" width="640" height="360" frameborder="0" allowfullscreen></iframe></div>
+
+          <br> Overwatch (This is a few patches ago): <br>
+
+          <div style="position:relative;height:0;padding-bottom:56.25%"><iframe src="https://www.youtube.com/embed/8ONLNFxEV6Q?ecver=2" style="position:absolute;width:100%;height:100%;left:0" width="640" height="360" frameborder="0" allowfullscreen></iframe></div>
+
+
+        </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion-general" href="#collapse-g4">Where do I send suggestions?</a>
+          </h4>
+        </div>
+        <div id="collapse-g4" class="panel-collapse collapse">
+          <div class="panel-body">Please email suggestions to suggestions@roast.gg <br>
+          For conserns and questions please send to contact.us@roast.gg</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ - Buyer -->
+    <h2> FAQ - Buyer </h2>
+    <div class="panel-group" id="accordion-buyer">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion-buyer" href="#collapse-b1">How do I contact the seller before placing the order?</a>
+          </h4>
+        </div>
+        <div id="collapse-b1" class="panel-collapse collapse">
+          <div class="panel-body"> There is a contact me button in the gig description page, and in the user's profile page.</div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion-buyer" href="#collapse-b2">How do I upload my video?</a>
+          </h4>
+        </div>
+        <div id="collapse-b2" class="panel-collapse collapse">
+          <div class="panel-body"> Any video service is fine. We recommend Youtube unlisted video.
+            <br> Please note that the seller may have specific instructions for video delivery.</div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion-buyer" href="#collapse-b3">How do I pick a seller?</a>
+          </h4>
+        </div>
+        <div id="collapse-b3" class="panel-collapse collapse">
+          <div class="panel-body"> We recommend a seller that is not too high above your current rank. <br>
+            The meta game is different at different ranks, and the amount of notes during the review could be overwhelming. This can make it hard to focus. <br>
+            Pick a seller that mains the role you do.
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion-buyer" href="#collapse-b4">How do I order a gig?</a>
+          </h4>
+        </div>
+        <div id="collapse-b4" class="panel-collapse collapse">
+          <div class="panel-body"> Click on the gig windows until you find one that you like, payment methods are displayed on the right side.
+
+            <br> After selecting the gig you want to purchase, and clicking the purchase button. You will be brought to a transaction screen. <br>
+            In this screen you will be able to chat with the seller for particular inquiries about format and other specifics. <br>
+            In general you will have recorded a VOD you want reviewed and send a link to it through the chat. <br>
+            After the seller delivers the review you may use the chat to clarify anything, but the transaction is considered complete and you may review your seller.
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion-buyer" href="#collapse-b5">How do I tip?</a>
+          </h4>
+        </div>
+        <div id="collapse-b5" class="panel-collapse collapse">
+          <div class="panel-body"> Tips aren't supported yet. Soontm</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ - Buyer -->
+    <h2>FAQ - Seller</h2>
+    <div class="panel-group" id="accordion-seller">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion-seller" href="#collapse-s1">How do I get paid?</a>
+          </h4>
+        </div>
+        <div id="collapse-s1" class="panel-collapse collapse">
+          <div class="panel-body"> Roast.gg utilizes Stripe to make payments. We ask that sellers create a Stripe account before posting their first gig.
+          <br> When an order for your gig is recieved the payment should be displayed in your Stripe account. <br>
+                Roast.gg keeps 10% + $0.30 usd of each sale to cover Stripe fees.
+                This rate may change after the beta. <br>
+                The payments automatically rollout from your Stripe account to your bank account. <br>
+                It is possible to change the rollout intervals inside your Stripe account by navigating to the Stripe Dashboard > clicking on payouts > Settings. </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse-s2">Why Stripe?</a>
+          </h4>
+        </div>
+        <div id="collapse-s2" class="panel-collapse collapse">
+          <div class="panel-body"> We believe Stripe is our best choice to keep transaction cost down. We pass on the savings on to you. </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse-s3">What about chargebacks?</a>
+          </h4>
+        </div>
+        <div id="collapse-s3" class="panel-collapse collapse">
+          <div class="panel-body"> Chargebacks, like taxes are just a reality of life. At Roast.gg we have opted to keep our fees low at 7% + $0.30. <br>
+                <br> During the beta:
+                <br> As a seller, you are responsible for your buyer's chargebacks.
+                <br> When a chargeback occurs, both Stripe and Roast.gg return their fees. It would be like the sale never happened.
+                <br> <br> This stance may change after beta. For now we at Roast.gg hope that the low fees make up for the lack of chargeback protection.
+                <br> We would like to hear you out on this topic. Please do contact us at suggestions@roast.gg
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapse-s4">Can I have a negative Stripe balance?</a>
+          </h4>
+        </div>
+        <div id="collapse-s4" class="panel-collapse collapse">
+          <div class="panel-body"> Yes, you can. It will most likely be as a result of a chargeback. For more information on what happens: <br>
+            <a href="https://support.stripe.com/questions/what-happens-when-i-have-a-negative-balance">https://support.stripe.com/questions/what-happens-when-i-have-a-negative-balance</a>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion-seller" href="#collapse-s5">How do I scribble on video?</a>
+          </h4>
+        </div>
+        <div id="collapse-s5" class="panel-collapse collapse">
+          <div class="panel-body">
+            <p>For Windows we recommend <a href="https://epic-pen.com/">epic-pen</a>. <br>
+            For Mac <a href="https://flyingmeat.com/flysketch/">FlySketch</a>.</p>
+          </div>
+        </div>
+      </div>
+    </div><!-- id="accordion-seller" -->
+  </div><!-- id="faqs" -->
+
+{% endblock %}

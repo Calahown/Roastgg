@@ -1,0 +1,39 @@
+{% load template_settings %}
+
+<div id="uploader"></div>
+<input id="photoUploadedName" type="hidden" class="form-control" name="{{ fieldname }}" value="{% if instance %}{{ field }}{% endif %}" readonly>
+<script>
+  var originalPhotoUploadedName = document.getElementById("photoUploadedName").value
+  var uploader = new qq.FineUploader({
+//    debug: true,
+    element: document.getElementById("uploader"),
+    multiple: false, // just one file at a time
+    validation: {
+      allowedExtensions: ["jpeg", "jpg", "gif", "png", "tif", "tiff", "bmp"],
+      itemLimit: 1,
+      sizeLimit: 5 * 1024 *1024 // 5 megabytes
+    },
+    request: {
+      endpoint: '{% settings_value "MEDIA_UPLOADER_ENDPOINT" %}'
+    },
+    deleteFile: {
+      enabled: true,
+      endpoint: '{% settings_value "MEDIA_UPLOADER_ENDPOINT" %}'
+    },
+    callbacks: {
+      onDeleteComplete: function(id, xhr, isError) {
+          if (!isError)
+            document.getElementById("photoUploadedName")
+              .setAttribute("value", originalPhotoUploadedName)
+      },
+      onComplete: function(id, name, responseJSON, xhr) {
+          if (responseJSON.success)
+            document.getElementById("photoUploadedName")
+              .setAttribute("value", `${responseJSON.uuid}/${name}`)
+      },
+      onError: function(id, name, errorReason, xhrOrXdr) {
+          alert(qq.format("Error on file number {} - {}.  Reason: {}", id, name, errorReason));
+      }
+    }
+  })
+</script>

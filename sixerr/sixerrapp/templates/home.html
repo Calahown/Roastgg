@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load template_settings %}
+
+{% block page %}
+  <div class="row">
+    <div class="col-md-12">
+      <a href="{% url 'overview' %}"><img src="{% static 'img/gamer-03-over.png' %}" class = "banner"></a>
+    </div>
+
+    {% include 'commonTemplates/gigsThumbnail.html' with overlayEnabled=False %}
+
+  </div>
+
+{% endblock %}

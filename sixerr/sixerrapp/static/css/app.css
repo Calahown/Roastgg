@@ -1,0 +1,713 @@
+.container {
+  max-width: 1100px;
+}
+
+.navbar {
+  margin-bottom: 0;
+}
+
+.navbar-fixed-bottom, .navbar-fixed-top {
+  position: inherit;
+}
+
+.navbar-brand .glyphicon.glyphicon-info-sign {
+    font-size: 1.4em;
+    margin-top: -2px;
+}
+
+.navbar-brand .logo {
+  height: 23px;
+}
+
+.nav-username {
+  padding: 0 5px;
+}
+
+.nav-avatar {
+  height: 22px;
+  width: 22px;
+}
+
+.alert-in-login {
+  margin: 0 15px;
+  padding: 6px;
+  margin-bottom: 0;
+}
+
+a {
+  color: #323232;
+}
+
+a:hover {
+  color: #0bb536;
+}
+
+#category a {
+  padding: 5px 15px;
+}
+
+#body {
+  background-color: #f7f7f7;
+  /*
+  margin-top: 20px;
+  */
+}
+
+#body .banner {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* gig thumbnail */
+.dollar:before {
+    content: '$';
+    font-size: 0.8em;
+    vertical-align: top;
+}
+
+.verified-rank {
+  margin-right: 5px;
+  height: 24px;
+  width: 24px;
+}
+
+/*
+#footer {
+  padding: 20px 0;
+}
+*/
+.footer {
+  padding: 60px 0;
+  background: #111112;
+  color: #666666;
+}
+.footer ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.footer .social {
+  color: black;
+}
+.footer li, .footer a {
+  color: #666666;
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 24px;
+}
+.footer .title {
+  margin-bottom: .5rem;
+  font-size: 14px;
+  color: #ccc;
+  border-bottom: 1px solid #333;
+}
+.footer a:hover {
+  color: #65c2ed;
+}
+
+/* Social Icons */
+/*
+.social {
+  text-align: center;
+}
+*/
+.social a {
+  display: inline-block;
+  padding: 7px 8px 9px 8px;
+  width: 40px;
+  height: 40px;
+  margin: 0 4px;
+  background: #fff;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+.social a:hover {
+  background: #65c2ed;
+}
+/*
+.social a.linkedin {
+  padding: 4px;
+}
+.social a svg .face, .social a svg .twit, .social a svg .link {
+  fill: #000;
+}
+*/
+
+@media screen and (max-width: 768px) {
+  .footer .col-sm-6 {
+    padding-bottom: 2rem;
+  }
+}
+
+/* Row colors */
+
+.bg-gray {
+  background-color: #ddd;
+}
+
+.bg-white {
+  background-color: #fff;
+}
+
+.green {
+  color: #0bb536;
+}
+
+/* Form inputs */
+
+.checkbox {
+  padding-left: 20px; }
+  .checkbox label {
+    display: inline-block;
+    position: relative;
+    padding-left: 5px; }
+    .checkbox label::before {
+      content: "";
+      display: inline-block;
+      position: absolute;
+      width: 17px;
+      height: 17px;
+      left: 0;
+      margin-left: -20px;
+      border: 1px solid #cccccc;
+      border-radius: 3px;
+      background-color: #fff;
+      -webkit-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+      -o-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+      transition: border 0.15s ease-in-out, color 0.15s ease-in-out; }
+    .checkbox label::after {
+      display: inline-block;
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      left: 0;
+      top: 0;
+      margin-left: -20px;
+      padding-left: 3px;
+      padding-top: 1px;
+      font-size: 11px;
+      color: #555555; }
+  .checkbox input[type="checkbox"] {
+    opacity: 0; }
+    .checkbox input[type="checkbox"]:focus + label::before {
+      outline: thin dotted;
+      outline: 5px auto -webkit-focus-ring-color;
+      outline-offset: -2px; }
+    .checkbox input[type="checkbox"]:checked + label::after {
+      font-family: 'FontAwesome';
+      content: "\f00c"; }
+    .checkbox input[type="checkbox"]:disabled + label {
+      opacity: 0.65; }
+      .checkbox input[type="checkbox"]:disabled + label::before {
+        background-color: #eeeeee;
+        cursor: not-allowed; }
+  .checkbox.checkbox-circle label::before {
+    border-radius: 50%; }
+  .checkbox.checkbox-inline {
+    margin-top: 0; }
+
+.checkbox-primary input[type="checkbox"]:checked + label::before {
+  background-color: #428bca;
+  border-color: #428bca; }
+.checkbox-primary input[type="checkbox"]:checked + label::after {
+  color: #fff; }
+
+.checkbox-danger input[type="checkbox"]:checked + label::before {
+  background-color: #d9534f;
+  border-color: #d9534f; }
+.checkbox-danger input[type="checkbox"]:checked + label::after {
+  color: #fff; }
+
+.checkbox-info input[type="checkbox"]:checked + label::before {
+  background-color: #5bc0de;
+  border-color: #5bc0de; }
+.checkbox-info input[type="checkbox"]:checked + label::after {
+  color: #fff; }
+
+.checkbox-warning input[type="checkbox"]:checked + label::before {
+  background-color: #f0ad4e;
+  border-color: #f0ad4e; }
+.checkbox-warning input[type="checkbox"]:checked + label::after {
+  color: #fff; }
+
+.checkbox-success input[type="checkbox"]:checked + label::before {
+  background-color: #5cb85c;
+  border-color: #5cb85c; }
+.checkbox-success input[type="checkbox"]:checked + label::after {
+  color: #fff; }
+
+/* File uploader */
+
+.qq-gallery .qq-upload-button {
+  background: #0bb536;
+  border: 1px solid #0bb536;
+}
+
+.qq-gallery .qq-upload-button-hover {
+    background: #098a29;
+}
+
+.qq-gallery .qq-progress-bar {
+    background: #0bb536;
+}
+
+/*
+******************************
+Purchase/Sale detail ACTIONS
+******************************
+*/
+
+.label-as-badge {
+  border-radius: 1em;
+}
+
+.label-as-badge.label-success {
+  background-color: white;
+  color: #5cb85c;
+}
+
+.label-as-badge.label-primary {
+  background-color: white;
+  color: #337ab7;
+}
+
+.label-as-badge.label-disabled {
+  background-color: white;
+  color: darkgray;
+}
+
+.stair {
+  display:inline-block;
+  margin:0;
+  margin-right:-4px;
+  vertical-align:top;
+}
+
+.stair-text {
+  font-weight: 700;
+}
+
+.step {
+  margin: 5px;
+}
+
+.stair-text.step-1 {
+  padding-left: 20px;
+}
+
+.stair-text.step-2 {
+  padding-left: 10px;
+}
+
+.stair-text.step-3 {
+  padding-left: 45px;
+}
+
+.stair-text.step-4 {
+  padding-left: 75px;
+}
+
+.big-step-number {
+  font-size: 1.1em;
+}
+
+/* Overview */
+
+.step-icon {
+  min-height: 150px;
+}
+
+.step-icon img {
+  max-height: 150px;
+  max-width: 150px;
+}
+
+.image-container {
+    position: absolute;
+    top: -75px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex; /* add */
+    justify-content: center; /* add to align horizontal */
+    align-items: center; /* add to align vertical */
+}
+
+.sub-header {
+  padding: 20px 0 0 0;
+  text-align: center;
+}
+
+.sub-text {
+  padding: 0 0 30px 0;
+  text-align: center;
+  font-size: 1.2em;
+}
+
+.caption {
+  padding: 20px 0;
+  text-align: center;
+}
+
+.caption p {
+  font-size: 1.2em;
+}
+
+/* ------------
+   FAQ
+   ------------ */
+#faqs .panel-body a {
+  color:blue;
+  text-decoration:underline
+}
+
+/* ------------
+  profile
+  ------------ */
+
+.game {
+  padding: 0 5px;
+}
+
+.gameuser {
+  font-weight: bold;
+  padding: 0 5px;
+}
+
+.fake-input {
+      display: block;
+      width: 100%;
+      height: 34px;
+      padding: 6px 12px;
+      font-size: 14px;
+      line-height: 1.42857143;
+      color: #555;
+      background-color: #ddd;
+      background-image: none;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+      box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+      -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+      -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+      transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;}
+
+.fake-input img {
+  vertical-align: top;
+  max-height: 1.4em;
+  max-width: 1.4em;
+}
+
+/*
+.marketplace-icon {
+  margin-top: 30px;
+  height: 50px;
+  width: 50px;
+}
+*/
+
+/* ------------
+   checkout
+   ------------ */
+.step-label {
+  padding: 6px 12px;
+  text-align: center;
+  background-image: none;
+}
+.checkout-badge {
+  margin-top: 5px;
+}
+
+.checkout-form {
+  padding: 15px;
+}
+
+.flag-icon {
+  background-size: contain;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  border: 1px solid lightgray;
+  position: relative;
+  display: inline-block;
+  height: 30px;
+  width: 40px;
+  /* line-height: 1em; */
+}
+
+.flag-icon:before {
+  content: "\00a0";
+}
+
+.flag-icon-AT {
+  background-image: url(../flags/at.svg);
+}
+
+.flag-icon-BE {
+  background-image: url(../flags/be.svg);
+}
+
+.flag-icon-DE {
+  background-image: url(../flags/de.svg);
+}
+
+.flag-icon-DK {
+  background-image: url(../flags/dk.svg);
+}
+
+.flag-icon-ES {
+  background-image: url(../flags/es.svg);
+}
+
+.flag-icon-FI {
+  background-image: url(../flags/fi.svg);
+}
+
+.flag-icon-FR {
+  background-image: url(../flags/fr.svg);
+}
+
+.flag-icon-GB {
+  background-image: url(../flags/gb.svg);
+}
+
+.flag-icon-IE {
+  background-image: url(../flags/ie.svg);
+}
+
+.flag-icon-IT {
+  background-image: url(../flags/it.svg);
+}
+
+.flag-icon-LU {
+  background-image: url(../flags/lu.svg);
+}
+
+.flag-icon-NE {
+  background-image: url(../flags/ne.svg);
+}
+
+.flag-icon-PT {
+  background-image: url(../flags/pt.svg);
+}
+
+.flag-icon-SE {
+  background-image: url(../flags/se.svg);
+}
+
+.flag-icon-US {
+  background-image: url(../flags/us.svg);
+}
+
+/* used for first row to ignore lightbox */
+.first-absolute {
+  position: absolute;
+}
+
+#lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #333;
+    opacity: 0.8;
+    text-align: center;
+    display: none;
+    z-index: 2;
+}
+#lb-content {
+    color: #222;
+/*    height: 250px;
+    width: 300px; */
+    border: 2px solid #222;
+    background-color: #fff;
+    position: relative;
+    text-align: center;
+    padding-top: 10px;
+    border-radius: 4px;
+    display: none;
+    z-index: 3;
+}
+#lb-close {
+    display: block;
+    height: 22px;
+    width: 25px;
+    background-color: red;
+    color: #fff;
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 10px;
+}
+
+/*!
+ *  Font Awesome 4.6.3 by @davegandy - http://fontawesome.io - @fontawesome
+ *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
+ */
+/* FONT PATH
+ * -------------------------- */
+@font-face {
+  font-family: 'FontAwesome';
+  src: url('../fonts/fontawesome-webfont.eot?v=4.6.3');
+  src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.6.3') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff2?v=4.6.3') format('woff2'), url('../fonts/fontawesome-webfont.woff?v=4.6.3') format('woff'), url('../fonts/fontawesome-webfont.ttf?v=4.6.3') format('truetype'), url('../fonts/fontawesome-webfont.svg?v=4.6.3#fontawesomeregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+.fa {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.fa-bank:before {
+  content: "\f19c";
+}
+
+.fa-credit-card:before {
+  content: "\f09d";
+}
+
+.fa-shopping-cart:before {
+  content: "\f07a";
+}
+
+/* checkout misc */
+button > a {
+  color: white;
+  font-weight: bold;
+}
+
+button > a:hover {
+  color: lightgray;
+}
+
+.tax-rate {
+  font-weight: bold;
+}
+
+.tax-amount {
+  font-weight: bold;
+}
+
+.grand-total {
+  font-weight: bold;
+}
+
+/* ------------
+   create gigs
+   ------------ */
+.small-note {
+  margin: 15px 0;
+}
+/* ------------
+  badge colors
+  ------------ */
+.badge-red {
+  background-color: red;
+}
+
+.micro-badge {
+  font-size: 8px;
+  padding: 0;
+  margin-top: -16px;
+  margin-left: -12px;
+}
+
+.login-bullet {
+  margin-right: 10px;
+}
+
+.anchor-block {
+  display: block;
+}
+
+.anchor-block:link {
+    text-decoration: none;
+}
+
+.anchor-block:visited {
+    text-decoration: none;
+}
+
+.row-block:hover {
+  background-color: lightgray !important;
+}
+
+.overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 2;
+  opacity: 0.25;
+  background: rgba(39, 42, 43, 0.8);
+  transition: opacity 200ms ease-in-out;
+  border-radius: 4px;
+  margin: -4px 0 0 -4px;
+  color: #eee;
+}
+.overlay a {
+  color: #fff;
+}
+.overlay img {
+  max-width: 95% !important;
+}
+.overlay button {
+  margin: 5px;
+}
+.overlay:hover {
+  opacity: 1;
+}
+
+.glyphicon-star {
+   color: yellow;
+  text-shadow:0 0  black,0 0  black,0 0  black,0 0  black,0 0  black;
+}
+
+@import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+
+fieldset, label { margin: 0; padding: 0; }
+body{ margin: 20px; }
+h1 { font-size: 1.5em; margin: 10px; }
+
+/****** Style Star Rating Widget *****/
+
+.rating {
+  border: none;
+  float: left;
+}
+
+.rating > input { display: none; }
+.rating > label:before {
+  margin: 5px;
+  font-size: 1.25em;
+  font-family: FontAwesome;
+  display: inline-block;
+  content: "\f005";
+}
+
+.rating > .half:before {
+  content: "\f089";
+  position: absolute;
+}
+
+.rating > label {
+  color: #ddd;
+ float: right;
+}
+
+/***** CSS Magic to Highlight Stars on Hover *****/
+
+.rating > input:checked ~ label, /* show gold star when clicked */
+.rating:not(:checked) > label:hover, /* hover current star */
+.rating:not(:checked) > label:hover ~ label { color: #FFD700;  } /* hover previous stars in list */
+
+.rating > input:checked + label:hover, /* hover current star when changing rating */
+.rating > input:checked ~ label:hover,
+.rating > label:hover ~ input:checked ~ label, /* lighten current selection */
+.rating > input:checked ~ label:hover ~ label { color: #FFED85;  }

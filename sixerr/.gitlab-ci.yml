@@ -1,0 +1,92 @@
+variables:
+  MAIN_DOMAIN_NAME: roast.gg
+  HEROKU_STAGING_APP_NAME: safe-badlands-81716
+  HEROKU_PRODUCTION_APP_NAME: gig-a-game
+
+stages:
+  - test
+  - developing
+  - staging
+  - production
+
+test:
+  stage: test
+  script:
+  # env vars
+  - export DJANGO_DEBUG=$DJANGO_DEBUG
+  - export DJANGO_DEBUG=$DJANGO_ALLOWED_HOSTS
+  - export DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY
+  - export SOCIAL_AUTH_FACEBOOK_KEY=$SOCIAL_AUTH_FACEBOOK_KEY
+  - export SOCIAL_AUTH_FACEBOOK_SECRET=$SOCIAL_AUTH_FACEBOOK_SECRET
+  - export RUNNING_ENVIRONMENT=test
+  - export HOST_URL=test
+  - export EMAIL_HOST_PASSWORD=$EMAIL_HOST_PASSWORD
+  # this configures django application to use attached postgres database that is run on `postgres` host
+  # export DATABASE_URL=postgres://postgres:@postgres:5432/python-test-app
+  - apt-get update -qy
+  - apt-get install -y python3-dev python3-pip
+  - pip3 install -r requirements.txt
+  - python3 manage.py migrate
+  # Install BeautifulSoup4 just for tests
+  #- apt-get install python3-bs4 -y
+  - apt-get remove python3-pip -y
+  - apt-get install python3-setuptools
+  - easy_install3 BeautifulSoup4
+  #- python3 manage.py test
+
+deploy to lalo-branch:
+  variables:
+      HEROKU_DEVELOPING_APP_NAME: lalo-branch
+  stage: developing
+  script:
+  - apt-get update -qy
+  - apt-get install -y ruby-dev
+  - gem install dpl
+  - dpl --provider=heroku --app=$HEROKU_DEVELOPING_APP_NAME --api-key=$HEROKU_API_KEY
+  environment:
+    name: developing/$HEROKU_DEVELOPING_APP_NAME
+    url: http://$HEROKU_DEVELOPING_APP_NAME.$MAIN_DOMAIN_NAME
+  only:
+  - /^lalo-.*$/
+
+deploy to david-branch:
+  variables:
+      HEROKU_DEVELOPING_APP_NAME: david-branch
+  stage: developing
+  script:
+  - apt-get update -qy
+  - apt-get install -y ruby-dev
+  - gem install dpl
+  - dpl --provider=heroku --app=$HEROKU_DEVELOPING_APP_NAME --api-key=$HEROKU_API_KEY
+  environment:
+    name: developing/$HEROKU_DEVELOPING_APP_NAME
+    url: http://$HEROKU_DEVELOPING_APP_NAME.$MAIN_DOMAIN_NAME
+  only:
+  - /^david-.*$/
+
+deploy to staging:
+  stage: staging
+  script:
+  - apt-get update -qy
+  - apt-get install -y ruby-dev
+  - gem install dpl
+  - dpl --provider=heroku --app=$HEROKU_STAGING_APP_NAME --api-key=$HEROKU_API_KEY
+  environment:
+    name: staging
+    url: https://staging.$MAIN_DOMAIN_NAME
+  only:
+  - master
+
+deploy to production:
+  stage: production
+  script:
+  - apt-get update -qy
+  - apt-get install -y ruby-dev
+  - gem install dpl
+  - dpl --provider=heroku --app=$HEROKU_PRODUCTION_APP_NAME --api-key=$HEROKU_API_KEY
+  environment:
+    name: production
+    url: http://www.$MAIN_DOMAIN_NAME
+  when: manual
+  only:
+  - master

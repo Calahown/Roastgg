@@ -1,0 +1,163 @@
+{% load staticfiles %}
+{% load template_settings %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Roast.gg</title>
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/roasty-web-01-16x16.png' %}" sizes="16x16">
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/roasty-web-01-32x32.png' %}" sizes="32x32">
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/roasty-web-01-96x96.png' %}" sizes="96x96">
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <!-- Load custom vendor scripts and styles -->
+    {% block vendor %}{% endblock %}
+
+    <!-- Load as last stylesheet to override all others -->
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="navbar-inverse">
+        <div class="container">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="/"><img class="logo" src="{% static 'img/logo.png' %}"></a>
+          </div>
+          <form class="navbar-form navbar-left" role="search" method="GET" action="/search/">
+            <div class="form-group">
+              <div class="input-group">
+                <input type="text" name="title" class="form-control" placeholder="Search titles">
+                <span class="input-group-btn">
+                  <button class="btn btn-success">Search</button>
+                </span>
+              </div>
+            </div>
+          </form>
+          <ul class="nav navbar-nav navbar-right pull-right">
+            {% if user and not user.is_anonymous %}
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                  role="button" aria-haspopup="true" aria-expanded="false">
+                  <img src="{% if user.profile %}{{ user.profile.avatar }}{% else %}{% static 'img/avatar.jpg' %}{% endif %}" class="img-circle nav-avatar">
+                  <span class="badge badge-pill badge-red micro-badge{% has_unread_post 'any' %}">&nbsp;</span>
+                  <span class="nav-username">{{ user.profile.displayname }}</span>
+                  <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="{% url 'create_gig' %}">Create a gig</a></li>
+                  <li><a href="{% url 'my_gigs' %}">My Gigs</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="{% url 'my_sales' %}"><span class="badge badge-pill badge-red micro-badge{% has_unread_post 'sale' %}">&nbsp;</span>My Sales</a></li>
+                  <li><a href="{% url 'my_purchases' %}"><span class="badge badge-pill badge-red micro-badge{% has_unread_post 'purchase' %}">&nbsp;</span>My Purchases</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="{% url 'profile' user.profile.displayname %}">My Profile</a></li>
+                  <li><a href="{% url 'my_conversations' %}"><span class="badge badge-pill badge-red micro-badge{% has_unread_post 'message' %}">&nbsp;</span>My Conversations</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="{% url 'auth:logout' %}?next={{request.path}}">Logout</a></li>
+                </ul>
+              </li>
+            {% else %}
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Login</a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="{% url 'social:begin' 'facebook' %}?next={{request.path}}"><img src="{% static 'img/FB-f-Logo__blue_29.png' %}" class="login-bullet"><span>Login with Facebook</span></a>
+                    <!-- <a href="{% url 'social:begin' 'twitter' %}?next={{request.path}}">Login with Twitter</a> -->
+                    <a href="{% url 'social:begin' 'twitch' %}?next={{request.path}}"><img src="{% static 'img/Glitch_Purple_RGB-29.png' %}" class="login-bullet"><span>Login with Twitch</span></a>
+                  </li>
+                  <li role="separator" class="divider"></li>
+                  <li>
+                    <div class="alert alert-warning alert-in-login" role="alert">
+                      <small>By logging in you agree to our <a href="{% url 'termsofuse'%}">Terms</a> and <a href="{% url 'privacypolicy' %}">Privacy</a> policy.</small>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+            {% endif %}
+          </ul>
+
+          <div class="navbar-header pull-right">
+            <a class="navbar-brand" href="{% url 'overview' %}"><span class="glyphicon glyphicon-info-sign"></span></a>
+          </div>
+
+        </div>
+      </div>
+      <div id="category">
+        <div class="container">
+          <ul class="nav navbar-nav">
+<!--
+            <li><a href="/league-of-legends">League of Legends</a></li>
+            <li><a href="/overwatch">Overwatch</a></li>
+            <li><a href="/counter-strike">Counter Strike</a></li>
+-->
+            {% for slug_key, dict_value in ordered_categories.items %}
+               <li><a href="/{{ slug_key }}">{{ dict_value.text }}</a></li>
+            {% endfor %}
+          </ul>
+          <ul class ="nav navbar-nav pull-right">
+            <li class = "pull-right"><a href="{% url 'overview' %}#faqs">FAQ</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div id="body">
+      <div class="container">
+        {% block page %}
+        {% endblock %}
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6">
+            <ul>
+              <li class="title">Overview</li>
+              <li><a href="{% url 'overview' %}">How it works</a></li>
+              <li><a href="{% url 'overview' %}#faqs">FAQ</a></li>
+            </ul>
+          </div>
+          <div class="col-sm-6">
+            <ul>
+              <li class="title">Social</li>
+            </ul>
+            <div class="social">
+              <a href="https://www.facebook.com/Roastgg-311446565995273/" class="facebook">
+                <img src="{% static 'img/facebook.svg' %}">
+              </a>
+              <a href="https://twitter.com/roast_gg" class="twitter">
+                <img src="{% static 'img/twitter.svg' %}">
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            &nbsp;
+          </div>
+          <div class="col-sm-6">
+            <p><span class="copyright">Roast.gg &copy; 2017</span> |
+              <a href="{% url 'termsofuse'%}">Terms</a> |
+              <a href="{% url 'privacypolicy' %}">Privacy</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', '{% settings_value "GA_TRACKING_ID" %}', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</html>

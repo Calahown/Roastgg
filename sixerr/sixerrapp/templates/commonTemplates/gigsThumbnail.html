@@ -1,0 +1,41 @@
+{% load staticfiles %}
+{% load template_settings %}
+
+{% for gig in gigs %}
+<div class="col-md-3">
+  <div class="thumbnail{% if not gig.status %} disabled-overlay{% endif %}">
+    {% if overlayEnabled and canNotPublishGig %}
+    <div class="overlay">
+      <ul>
+        {% if noCompleteBillingCountry %}
+        <li><p>Missing country in <strong><a href="{% url 'profile' user.profile.displayname %}">My Profile</a></strong>.</p></li>
+        {% endif %}
+        {% if noStripeAccountYet %}
+        <li><p>No connected account to pay you</p>
+          <a href="{% url 'social:begin' 'stripe'%}?next={{request.path}}"><img src="{% static 'img/blue-on-light@2x.png'%}"></a></li>
+        {% endif %}
+      </ul>
+    </div>
+    {% endif %}
+    <a href="{% url 'gig_detail' gig.id %}"><img src="{% settings_value "MEDIA_ROOT" %}{{ gig.photo }}" ></a>
+    <div class="caption">
+      <p><a href="{% url 'gig_detail' gig.id %}">{{ gig.title }}</a></p>
+      <p><span>by <a href={% url 'profile' gig.user.profile.displayname %}>{{ gig.user.profile.displayname }}</a></span></p>
+      <b class="dollar green pull-right">{{ gig.price }}</b>
+      {% if gig.avgstars %}
+      <div class="pull-left">
+      <label class="glyphicon glyphicon-star"></label><font color="gray">({{ gig.avgstars }})</font>
+      </div>
+      {% endif %}
+      {% if gig.category == 'OW' and gig.user.ranking and gig.user.ranking.owrank %}
+      <img class="verified-rank" src="{% static 'img/verified.png' %}">{{ gig.user.ranking.get_owrank_display }}
+      {% endif %}
+      {% if gig.category == 'LL' and gig.user.ranking and gig.user.ranking.lolrank %}
+      <img class="verified-rank" src="{% static 'img/verified.png' %}">{{ gig.user.ranking.get_lolrank_display }}
+      {% endif %}
+      <br>
+    </div>
+
+  </div>
+</div>
+{% endfor %}

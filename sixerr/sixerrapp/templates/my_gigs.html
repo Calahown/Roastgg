@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load template_settings %}
+
+{% block vendor %}
+  {% if canNotPublishGig %}
+  <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  {% endif %}
+{% endblock %}
+
+{% block page %}
+
+  <h1 style="margin-bottom: 30px">My Gigs</h1>
+  <div class="panel panel-default">
+    <table class="table table-bordered table-striped">
+      <thead class="bg-success">
+        <tr>
+          <th>
+            <th>Gig Title</th>
+            <th>Status</th>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for gig in gigs %}
+        <tr class="row-block">
+          <td><a class="anchor-block" href="{% url 'edit_gig' gig.id %}">{{ forloop.counter}}</a></td>
+          <td><a class="anchor-block" href="{% url 'edit_gig' gig.id %}">{{ gig.title }}</a></td>
+          <td><a class="anchor-block" href="{% url 'edit_gig' gig.id %}"
+                  {% if noStripeAccountYet %}title="Link to Stripe account so you can be paid"{% endif %}>{% if gig.status %} Active {% else %}<span class="font-weight-bold text-danger"> DISABLED </span>{% endif %}</a></td>
+        </tr>
+
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4>Previews</h4>
+    </div>
+    <div class="panel-body">
+
+      <div id="gig-previews" class="row">
+        {% include 'commonTemplates/gigsThumbnail.html' with overlayEnabled=True %}
+      </div>
+
+    </div>
+  </div>
+
+
+  {% if canNotPublishGig %}
+  <script>
+    var sizeTheOverlays = function() {
+        $(".overlay").resize().each(function() {
+        var h = $(this).parent().outerHeight();
+        var w = $(this).parent().outerWidth();
+        $(this).css("height", h);
+        $(this).css("width", w);
+      });
+    };
+
+    $('#gig-previews').imagesLoaded()
+      .done( function( instance ) {
+        sizeTheOverlays();
+        // console.log('all images successfully loaded');
+      })
+
+    var width = $(window).width();
+    $(window).resize(function(){
+       if($(this).width() != width){
+          width = $(this).width();
+          sizeTheOverlays();
+       }
+    });
+
+  </script>
+  {% endif %}
+
+{% endblock %}

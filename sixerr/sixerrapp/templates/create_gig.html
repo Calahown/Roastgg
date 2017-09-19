@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block vendor %}
+  <script src="{% static 'js/validator.min.js' %}"></script>
+  {% include 'commonTemplates/uploader_setup.html' %}
+{% endblock %}
+
+{% block page %}
+  {% if error %}
+
+    <div class="alert alert-warning alert-dismissable" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>Warning!</strong> {{ error }}
+    </div>
+
+  {% endif %}
+
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <form class="form-horizontal" method="POST" enctype="multipart/form-data" role="form" data-toggle="validator">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Gig Title</label>
+          <div class="col-sm-10">
+            <textarea rows="3" class="form-control" name="title" data-minlength="2" required></textarea>
+            <div class="help-block with-errors">* required</div>
+        </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">CATEGORY</label>
+          <div class="col-sm-10">
+            <select name="category" class="form-control" required>
+              <option value="LL">League of Legends</option>
+              <option value="OW">Overwatch</option>
+              <option value="CS">Counter Strike</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">DESCRIPTION</label>
+          <div class="col-sm-10">
+            <textarea rows="5" placeholder="Describe your product here..."class="form-control" name="description" data-minlength="2" required></textarea>
+            <div class="help-block with-errors">* required</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">PRICE ($)</label>
+          <div class="col-sm-10">
+            <input id="price" type="number" class="form-control" min='1' max='500' value=6 name="price" required>
+            <div class="help-block with-errors">* required</div>
+            <div class="fee-message">Roast.gg's fee is 10% + $0.30. Currently: <span id="fee"></span></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Image</label>
+          <div class="col-sm-10">
+            {% include 'commonTemplates/file_uploader_field.html' with instance=gig field=gig.photo fieldname='photo' %}
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Status</label>
+          <div class="col-sm-10">
+            {% if canNotPublishGig %}
+            <select name="status" class="form-control" disabled title="When ready, link a Stripe account so you can be paid">
+              <option value="1">Active</option>
+              <option value="0" selected>DISABLED</option>
+            </select>
+            <div class="help-block with-errors">* forced to DISABLED until publishing requirements below fulfilled</div>
+            {% else %}
+            <select name="status" class="form-control">
+              <option value="1" selected>Active</option>
+              <option value="0">Disabled</option>
+            </select>
+            {% endif %}
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Purchase Instructions</label>
+          <div class="col-sm-10">
+              <textarea type="text" class="form-control" placeholder = "Initial instructions for the buyer to follow go here... " name="sellmsg" rows='5'></textarea>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-success">Create Gig</button>
+            {% if canNotPublishGig %}
+            <div class="small-note">
+              <div class="alert alert-warning alert-dismissable" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>Notice!</strong>
+                <p>All your Gigs will be created with the <strong>Status</strong> DISABLED and you will be able to change it to ACTIVE once you fulfill the requirements stated below.</p>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {% if canNotPublishGig %}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4>Gigs publishing requirements</h4>
+    </div>
+    <div class="panel-body">
+      <h4>So your Gigs can be published, you need to:</h4>
+      <ul>
+        {% if noCompleteBillingCountry %}
+        <li>
+          <p>Complete required data in <strong><a href="{% url 'profile' user.profile.displayname %}">My Profile</a></strong>.</p>
+        </li>
+        {% endif %}
+        {% if noStripeAccountYet %}
+        <li>
+          <p> Connect a Stripe account so you can be paid.</p>
+          <center><a href="{% url 'social:begin' 'stripe'%}?next={{request.path}}"><img src="{% static 'img/blue-on-light@2x.png'%}" width='270'></a></center>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4>Things to know and recommendations:</h4>
+    </div>
+    <div class="panel-body">
+      <ul>
+        <li>Please keep the Gig titles and images PG.</li>
+        <li>Keep in mind the search is only on the title.</li>
+        <li>Post a profile of your rank.</li>
+        <br>
+        <li>Please refer to the FAQ for more questions or contact us.</li>
+      </ul>
+      <br>
+    </div>
+  </div>
+
+  <script>
+  function calFee(price) {
+    if(price != '') {
+        fee = parseInt(price) * 0.1 + .3;
+        $('#fee').html(fee.toLocaleString('en-US', { style: 'currency', currency: 'USD' }));
+    }
+  }
+
+  calFee( $('#price').val() );
+
+  $(document).ready(function(){
+      $('#price').keyup(function(){
+        calFee( $('#price').val() );
+      });
+  })
+
+  // jQuery plugin to prevent double submission of forms
+  jQuery.fn.preventDoubleSubmission = function() {
+    $(this).on('submit',function(e){
+      var $form = $(this);
+
+      if ($form.data('submitted') === true) {
+        // Previously submitted - don't submit again
+        e.preventDefault();
+      } else {
+        // Mark it so that the next submit can be ignored
+        $form.data('submitted', true);
+      }
+    });
+
+    // Keep chainability
+    return this;
+  };
+
+  $('form').preventDoubleSubmission();
+  </script>
+{% endblock %}
